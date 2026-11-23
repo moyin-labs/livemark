@@ -1,0 +1,4 @@
+# 生成bundle中包含第三方模板字符串，保留其中的空白，不作为源码格式错误。
+app/Sources/LiveMark/Resources/WebKernel/main.js linguist-generated=true -whitespace
+app/Sources/LiveMark/Resources/WebKernel/style/katex.min.css linguist-generated=true
+app/Sources/LiveMark/Resources/WebKernel/THIRD_PARTY_NOTICES.txt linguist-generated=true

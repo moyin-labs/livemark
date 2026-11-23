@@ -1,0 +1,456 @@
+/* 自有排版实现；所有尺寸统一用于正文与HTML导出。 */
+.document {
+  font-family: var(--body-font);
+  font-weight: 400;
+  line-height: 1.7;
+  word-wrap: break-word;
+  color: var(--fg);
+}
+.ProseMirror {
+  outline: none;
+  min-height: calc(100vh - 220px);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  position: relative;
+  caret-color: var(--fg);
+}
+.ProseMirror p {
+  position: relative;
+}
+.ProseMirror p:first-child:last-child.empty-paragraph:before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  position: absolute;
+  pointer-events: none;
+}
+.ProseMirror:has(> p.empty-paragraph:only-child):before {
+  content: attr(data-placeholder);
+  position: absolute;
+  color: var(--muted);
+  pointer-events: none;
+  font-size: 16px;
+  top: 0;
+}
+.document h1,
+.document h2,
+.document h3,
+.document h4,
+.document h5,
+.document h6 {
+  position: relative;
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 1.2em 0 0.65em;
+  scroll-margin-top: 60px;
+}
+.document h1 {
+  font-size: 2.25em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--divider);
+}
+.document h2 {
+  font-size: 1.75em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid var(--divider);
+}
+.document h3 {
+  font-size: 1.5em;
+}
+.document h4 {
+  font-size: 1.25em;
+}
+.document h5 {
+  font-size: 1em;
+}
+.document h6 {
+  font-size: 1em;
+  color: var(--muted);
+}
+.document h1:first-child,
+.document h2:first-child {
+  margin-top: 0.3em;
+}
+.document p {
+  margin: 0 0 0.85em;
+}
+.document strong {
+  font-weight: 600;
+}
+.document a {
+  color: var(--accent);
+  text-decoration: none;
+  cursor: pointer;
+}
+.document a:hover {
+  text-decoration: underline;
+}
+.document blockquote {
+  margin: 1em 0;
+  padding: 0 15px;
+  border-left: 4px solid var(--divider);
+  color: var(--muted);
+}
+.document blockquote p:last-child {
+  margin-bottom: 0;
+}
+.document ul,
+.document ol {
+  padding-left: 30px;
+  margin: 0 0 1em;
+}
+.document li {
+  margin: 0.25em 0;
+}
+.document li p {
+  margin: 0.2em 0;
+}
+.document li ul,
+.document li ol {
+  margin-bottom: 0;
+}
+.document ul:has(> li.task-item) {
+  list-style: none;
+}
+.document li.task-item {
+  list-style: none;
+  position: relative;
+}
+.document .task-item > input[type="checkbox"] {
+  position: absolute;
+  left: -23px;
+  top: 5px;
+  margin: 0;
+  width: 14px;
+  height: 14px;
+  accent-color: var(--accent);
+  cursor: pointer;
+}
+.document .task-item[data-checked="true"] > div > p {
+  color: var(--muted);
+  text-decoration: line-through;
+}
+.document .task-list-item {
+  list-style: none;
+}
+.document .task-list-item input {
+  margin: 0 0.6em 0 -1.5em;
+}
+.document code {
+  font-family: var(--code-font);
+  font-size: 0.9em;
+  border-radius: 3px;
+  padding: 2px 4px;
+  background: var(--code-bg);
+}
+.document pre {
+  font-family: var(--code-font);
+  line-height: 1.6;
+  padding: 12px 16px;
+  background: var(--code-bg);
+  border-radius: 3px;
+  overflow: auto;
+  white-space: pre;
+  margin: 1em 0;
+  font-size: 0.85em;
+  tab-size: 4;
+}
+.document pre code {
+  background: none;
+  font: inherit;
+  padding: 0;
+  border: 0;
+  white-space: pre;
+}
+.document .code-block {
+  position: relative;
+  margin: 1em 0;
+}
+.document .code-block pre {
+  margin: 0;
+  min-height: 48px;
+  padding-bottom: 24px;
+}
+.code-language {
+  position: absolute;
+  bottom: 3px;
+  right: 10px;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-size: 11px;
+  text-align: right;
+  width: 105px;
+  padding: 2px;
+  opacity: 0;
+}
+.code-block:hover .code-language,
+.code-block.is-editing .code-language {
+  opacity: 1;
+}
+.document .visual-block {
+  position: relative;
+  min-height: 50px;
+  margin: 1.2em 0;
+  text-align: center;
+}
+.visual-block .visual-result {
+  padding: 12px;
+  overflow: auto;
+  cursor: text;
+}
+.visual-result svg,
+.mermaid-preview svg {
+  max-width: 100%;
+  height: auto;
+}
+.visual-block:not(.is-editing) > pre,
+.visual-block:not(.is-editing) > .code-language {
+  display: none;
+}
+.visual-block.is-editing > .visual-result {
+  border-top: 1px dashed var(--divider);
+  opacity: 0.8;
+}
+.document .math-block pre {
+  text-align: left;
+}
+.inline-math {
+  display: inline-block;
+  cursor: text;
+}
+.diagram-error {
+  font-size: 12px;
+  color: #b05343;
+  background: var(--code-bg);
+  padding: 15px;
+}
+.document table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  table-layout: auto;
+}
+.document th,
+.document td {
+  border: 1px solid var(--divider);
+  padding: 6px 13px;
+  vertical-align: top;
+  position: relative;
+  min-width: 6em;
+  white-space: normal;
+  overflow-wrap: break-word;
+}
+.document th {
+  font-weight: 600;
+  background: var(--code-bg);
+}
+.document tr:nth-child(even) {
+  background: color-mix(in srgb, var(--code-bg) 45%, transparent);
+}
+.document td p,
+.document th p {
+  margin: 0;
+  min-height: 1.7em;
+}
+.document .tableWrapper {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.document .selectedCell:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #b3d4fc66;
+  pointer-events: none;
+}
+.column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: -2px;
+  width: 4px;
+  background: var(--accent);
+  pointer-events: none;
+}
+.resize-cursor {
+  cursor: col-resize;
+}
+.document img {
+  max-width: 100%;
+  height: auto;
+  vertical-align: middle;
+}
+.image-wrapper {
+  display: inline-block;
+  max-width: 100%;
+  position: relative;
+}
+.image-error {
+  font-family: var(--ui-font);
+  font-size: 12px;
+  color: var(--muted);
+  display: block;
+  border: 1px dashed var(--divider);
+  padding: 15px;
+}
+.document hr {
+  border: 0;
+  border-top: 2px solid var(--divider);
+  margin: 2em 0;
+}
+.document mark {
+  background: #ffe58a;
+  color: #333;
+}
+.document .footnote-ref {
+  color: var(--accent);
+  font-size: 0.75em;
+}
+.document .raw-block {
+  font-size: 12px;
+  color: var(--muted);
+}
+.syntax-marker {
+  font-family: var(--code-font);
+  font-size: 12px;
+  color: var(--muted);
+  opacity: 0.7;
+  user-select: none;
+}
+.heading-marker {
+  position: absolute;
+  right: calc(100% + 10px);
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: 400;
+  white-space: nowrap;
+}
+.ProseMirror-selectednode {
+  outline: 2px solid var(--accent);
+}
+.ProseMirror-hideselection *::selection {
+  background: transparent;
+}
+.ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+}
+.ProseMirror-gapcursor:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 1px solid var(--fg);
+  animation: cursor-blink 1.1s steps(2, start) infinite;
+}
+.ProseMirror-focused .ProseMirror-gapcursor {
+  display: block;
+}
+@keyframes cursor-blink {
+  to {
+    visibility: hidden;
+  }
+}
+.hljs-keyword,
+.hljs-selector-tag {
+  color: #a626a4;
+}
+.hljs-string,
+.hljs-regexp {
+  color: #50a14f;
+}
+.hljs-number,
+.hljs-literal {
+  color: #986801;
+}
+.hljs-comment {
+  color: #9199a0;
+  font-style: italic;
+}
+.hljs-title,
+.hljs-section,
+.hljs-name {
+  color: #4078f2;
+}
+.hljs-type,
+.hljs-built_in {
+  color: #0184bc;
+}
+.hljs-attr,
+.hljs-variable {
+  color: #b08000;
+}
+html[data-theme="night"] .hljs-keyword {
+  color: #c678dd;
+}
+html[data-theme="night"] .hljs-string {
+  color: #98c379;
+}
+html[data-theme="night"] .hljs-number {
+  color: #d19a66;
+}
+html[data-theme="night"] .hljs-title {
+  color: #61afef;
+}
+html[data-theme="night"] .hljs-attr {
+  color: #e5c07b;
+}
+html[data-theme="newsprint"] .document h1,
+html[data-theme="newsprint"] .document h2 {
+  font-weight: 500;
+}
+html[data-theme="newsprint"] .document blockquote {
+  font-style: italic;
+}
+html[data-theme="pixyll"] .document h1 {
+  border-bottom: 0;
+}
+html[data-theme="pixyll"] .document h2 {
+  border-bottom: 0;
+}
+/* Newsprint参考界面的无框表格、衬线层级和轻量任务勾选。 */
+html[data-theme="newsprint"] .document h2 {
+  border-bottom: 0;
+  margin-top: 1.9em;
+}
+html[data-theme="newsprint"] .document th,
+html[data-theme="newsprint"] .document td {
+  border: 0;
+  text-align: left;
+}
+html[data-theme="newsprint"] .document tr:nth-child(even) {
+  background: transparent;
+}
+html[data-theme="newsprint"]
+  .document
+  li.task-item[data-checked="true"]
+  > div
+  > p {
+  color: inherit;
+  text-decoration: none;
+}
+html[data-theme="newsprint"] .document .task-item > input[type="checkbox"] {
+  appearance: none;
+  width: 18px;
+  height: 20px;
+  top: 1px;
+  background: none;
+  border: 0;
+}
+html[data-theme="newsprint"]
+  .document
+  .task-item
+  > input[type="checkbox"]:after {
+  content: "✓";
+  font-family: serif;
+  font-size: 18px;
+  color: var(--divider);
+}
+html[data-theme="newsprint"]
+  .document
+  .task-item
+  > input[type="checkbox"]:checked:after {
+  color: var(--fg);
+}

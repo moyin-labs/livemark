@@ -1,0 +1,614 @@
+/* PT Serif来自Google Fonts开源发行包，按SIL OFL 1.1随应用离线分发。 */
+@font-face {
+  font-family: "PT Serif";
+  src: url(fonts/pt_serif_regular.ttf) format("truetype");
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PT Serif";
+  src: url(fonts/pt_serif_bold.ttf) format("truetype");
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PT Serif";
+  src: url(fonts/pt_serif_italic.ttf) format("truetype");
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PT Serif";
+  src: url(fonts/pt_serif_bold_italic.ttf) format("truetype");
+  font-style: italic;
+  font-weight: 700;
+  font-display: swap;
+}
+:root {
+  --bg: #f6f5f1;
+  --fg: #262322;
+  --muted: #8d8985;
+  --sidebar-bg: var(--bg);
+  --divider: #dedbd7;
+  --hover: #e6e4e0;
+  --selected: #e3e1dc;
+  --accent: #4183c4;
+  --code-bg: #e9e8e5;
+  --code-font: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --body-font: "PT Serif", "Times New Roman", serif;
+  --ui-font: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  --sidebar-width: 240px;
+  --body-size: 16px;
+  --paper-width: 860px;
+  --paper-max-width: 1200px;
+  --paper-gutter: 40px;
+  color-scheme: light;
+  font-family: var(--ui-font);
+}
+html[data-theme="github"],
+html[data-theme="light"] {
+  --bg: #fff;
+  --fg: #333;
+  --muted: #999;
+  --divider: #e7e7e7;
+  --hover: #eee;
+  --selected: #e9e9e9;
+  --code-bg: #f8f8f8;
+  --body-font: "Helvetica Neue", Arial, "PingFang SC", sans-serif;
+}
+html[data-theme="gothic"] {
+  --bg: #fff;
+  --fg: #303030;
+  --body-font: "Avenir Next", "PingFang SC", sans-serif;
+  --body-size: 16px;
+  --paper-width: 800px;
+}
+html[data-theme="pixyll"] {
+  --bg: #fff;
+  --fg: #333;
+  --body-font: Georgia, "Songti SC", serif;
+  --body-size: 18px;
+  --paper-width: 820px;
+}
+html[data-theme="whitey"] {
+  --bg: #fafafa;
+  --fg: #383838;
+  --body-font: "Helvetica Neue", "PingFang SC", sans-serif;
+  --paper-width: 800px;
+}
+html[data-theme="night"],
+html[data-theme="dark"] {
+  --bg: #363b40;
+  --fg: #d6d6d6;
+  --muted: #979da3;
+  --divider: #454b51;
+  --hover: #3e454c;
+  --selected: #474e56;
+  --accent: #a2bed7;
+  --code-bg: #30353a;
+  --body-font: "Helvetica Neue", Arial, "PingFang SC", sans-serif;
+  color-scheme: dark;
+}
+/* 字体独立于颜色主题；跟随主题时保留主题自己的正文字体。 */
+html[data-font="ptserif"] {
+  /* 中文交由serif的系统字形回退，避免强制命中另一套宋体字重。 */
+  --body-font: "PT Serif", "Times New Roman", serif;
+}
+html[data-theme="newsprint"] {
+  -webkit-font-smoothing: antialiased;
+}
+html[data-font="system"] {
+  --body-font: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+}
+html[data-font="pingfang"] {
+  --body-font: "PingFang SC", -apple-system, sans-serif;
+}
+html[data-font="songti"] {
+  --body-font: "Songti SC", "STSong", Palatino, serif;
+}
+html[data-font="kaiti"] {
+  --body-font: "Kaiti SC", "STKaiti", "KaiTi", serif;
+}
+html[data-font="mono"] {
+  --body-font: Menlo, "SFMono-Regular", "PingFang SC", monospace;
+}
+.outline-item,
+.file-item {
+  font-family: var(--body-font);
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
+}
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: default;
+  border: 0;
+  background: none;
+}
+button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+button:disabled {
+  opacity: 0.4;
+}
+input,
+textarea {
+  outline: none;
+}
+button[hidden],
+[hidden] {
+  display: none !important;
+}
+button:hover {
+  background: var(--hover);
+}
+#app {
+  height: 100%;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1px minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) 26px;
+}
+#sidebar {
+  grid-column: 1;
+  grid-row: 1 / -1;
+  background: var(--sidebar-bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 13px;
+  user-select: none;
+}
+#sidebar-header {
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 18px;
+}
+.sidebar-tab {
+  height: 100%;
+  padding: 0 10px;
+  position: relative;
+  color: var(--muted);
+  font-size: 14px;
+}
+.sidebar-tab.selected {
+  color: var(--fg);
+}
+.sidebar-tab.selected:after {
+  content: "";
+  height: 2px;
+  background: var(--fg);
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  opacity: 0.6;
+}
+#sidebar-search-wrap {
+  padding: 10px 14px 7px;
+}
+#sidebar-search {
+  border: 0;
+  border-radius: 4px;
+  width: 100%;
+  padding: 5px 8px;
+  font-size: 12px;
+  background: var(--hover);
+}
+#outline,
+#files {
+  overflow: auto;
+  flex: 1;
+  min-height: 0;
+  padding: 12px 0 24px;
+}
+.outline-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  line-height: 1.6;
+  padding: 7px 18px 7px calc(18px + var(--level) * 18px);
+  white-space: normal;
+  overflow-wrap: anywhere;
+  color: var(--fg);
+  border-left: 2px solid transparent;
+}
+.outline-item[data-level="1"] {
+  font-weight: 700;
+}
+.outline-item.active {
+  background: var(--selected);
+  border-left-color: var(--accent);
+}
+.sidebar-empty {
+  color: var(--muted);
+  font-size: 12px;
+  padding: 4px 18px;
+  line-height: 1.8;
+}
+.file-item {
+  display: block;
+  width: 100%;
+  padding: 7px 16px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.file-item.active {
+  background: var(--selected);
+}
+.file-item.directory {
+  font-weight: 550;
+}
+.file-children {
+  padding-left: 14px;
+}
+#sidebar-resizer {
+  grid-column: 2;
+  grid-row: 1 / -1;
+  background: var(--divider);
+  cursor: col-resize;
+  z-index: 3;
+  position: relative;
+}
+#sidebar-resizer:after {
+  content: "";
+  position: absolute;
+  left: -3px;
+  width: 7px;
+  height: 100%;
+}
+.resizing,
+.resizing * {
+  cursor: col-resize !important;
+  user-select: none !important;
+}
+#workspace {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  position: relative;
+}
+#writing-pane,
+#source-pane,
+#preview-pane {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scroll-behavior: auto;
+}
+#rich-host,
+#preview {
+  width: 100%;
+  max-width: min(var(--content-width, var(--paper-width)), var(--paper-max-width));
+  margin: auto;
+  padding: 48px var(--paper-gutter) 160px;
+  min-height: 100%;
+  font-size: var(--body-size);
+}
+#rich-host {
+  padding-top: 42px;
+}
+#cm-host {
+  height: 100%;
+  max-width: 1100px;
+  margin: auto;
+  font-size: 14px;
+}
+#cm-host .cm-editor {
+  height: 100%;
+}
+#cm-host .cm-scroller {
+  overflow: auto;
+}
+#app.sidebar-hidden {
+  grid-template-columns: 0 0 minmax(0, 1fr);
+}
+#app.sidebar-hidden #sidebar,
+#app.sidebar-hidden #sidebar-resizer {
+  visibility: hidden;
+}
+#status-bar {
+  grid-row: 2;
+  grid-column: 3;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  background: var(--bg);
+  font-size: 11px;
+  color: var(--muted);
+  padding: 0 12px;
+  user-select: none;
+}
+#status-bar > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+#status-bar button {
+  height: 23px;
+  min-width: 25px;
+  border-radius: 3px;
+  padding: 2px 5px;
+}
+#find-bar {
+  padding: 8px 16px;
+  background: var(--sidebar-bg);
+  border-bottom: 1px solid var(--divider);
+  font-size: 12px;
+}
+#external-change-bar {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--divider);
+  background: var(--code-bg);
+  font-size: 12px;
+}
+#external-change-bar button {
+  color: var(--accent);
+  padding: 4px 8px;
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+}
+.find-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 740px;
+  margin-left: auto;
+}
+.find-row + .find-row {
+  margin-top: 7px;
+}
+.find-row input[type="search"],
+.find-row input:not([type]) {
+  flex: 1;
+  min-width: 80px;
+  background: var(--bg);
+  border: 1px solid var(--divider);
+  border-radius: 4px;
+  padding: 5px 9px;
+}
+.find-row button {
+  padding: 4px 8px;
+  border-radius: 3px;
+}
+.find-row label {
+  display: flex;
+  gap: 3px;
+  align-items: center;
+}
+#find-count {
+  min-width: 42px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+#table-tools {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1px;
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  white-space: nowrap;
+  background: var(--bg);
+  border: 1px solid var(--divider);
+  border-radius: 5px;
+  box-shadow: 0 3px 14px #0001;
+  font-size: 11px;
+  padding: 3px;
+}
+#table-tools button {
+  padding: 4px 7px;
+  border-radius: 2px;
+}
+.tool-divider {
+  height: 15px;
+  width: 1px;
+  background: var(--divider);
+  margin: 0 3px;
+}
+#context-menu {
+  position: fixed;
+  z-index: 25;
+  width: 182px;
+  padding: 5px;
+  background: var(--bg);
+  border: 1px solid var(--divider);
+  border-radius: 7px;
+  box-shadow: 0 5px 24px #0003;
+  font-size: 13px;
+}
+#context-menu button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border-radius: 4px;
+  padding: 6px 12px;
+}
+dialog {
+  border: 1px solid var(--divider);
+  background: var(--bg);
+  color: var(--fg);
+  border-radius: 10px;
+  padding: 24px;
+  width: 420px;
+  box-shadow: 0 20px 80px #0004;
+  font-size: 13px;
+}
+dialog::backdrop {
+  background: #0003;
+}
+dialog h2 {
+  font-size: 17px;
+  margin: 0 0 20px;
+}
+dialog label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 15px 0;
+}
+dialog input,
+dialog textarea {
+  width: 100%;
+  border: 1px solid var(--divider);
+  border-radius: 5px;
+  padding: 8px;
+  background: var(--sidebar-bg);
+}
+dialog textarea {
+  resize: vertical;
+  min-height: 90px;
+  font-family: var(--code-font);
+}
+dialog footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 22px;
+}
+dialog button {
+  padding: 6px 17px;
+  border-radius: 5px;
+  border: 1px solid var(--divider);
+}
+dialog .primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+#toast {
+  position: fixed;
+  bottom: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--fg);
+  color: var(--bg);
+  border-radius: 6px;
+  padding: 9px 16px;
+  font-size: 12px;
+  box-shadow: 0 2px 10px #0002;
+  z-index: 30;
+}
+.search-match {
+  background: #ffe37b;
+  color: #222;
+}
+.search-match.current {
+  background: #ffa94d;
+  scroll-margin: 24px;
+}
+.focus-mode .ProseMirror > * {
+  opacity: 0.25;
+  transition: opacity 0.15s;
+}
+.focus-mode .ProseMirror > .active-block {
+  opacity: 1;
+}
+.typewriter-mode #rich-host {
+  padding-bottom: 60vh;
+}
+@media (max-width: 760px) {
+  :root {
+    --sidebar-width: 200px;
+    --paper-gutter: 28px;
+  }
+}
+@media print {
+  html,
+  body {
+    height: auto;
+    overflow: visible;
+    background: white;
+    color: #222;
+  }
+  #app {
+    display: block;
+    height: auto;
+  }
+  #sidebar,
+  #sidebar-resizer,
+  #status-bar,
+  #find-bar,
+  #external-change-bar,
+  #table-tools,
+  .code-language {
+    display: none !important;
+  }
+  #workspace,
+  #writing-pane {
+    display: block;
+    overflow: visible;
+  }
+  #rich-host {
+    max-width: none;
+    padding: 0;
+  }
+  .syntax-marker {
+    display: none !important;
+  }
+}
+
+#app.busy #workspace:after {
+  content: "正在打开文档…";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  opacity: 0.85;
+  color: var(--muted);
+  font-size: 13px;
+  z-index: 40;
+}
+:root {
+  --syntax-keyword: #a626a4;
+  --syntax-string: #50a14f;
+  --syntax-number: #986801;
+}
+html[data-theme="night"] {
+  --syntax-keyword: #c678dd;
+  --syntax-string: #98c379;
+  --syntax-number: #d19a66;
+}
+
+.focus-mode .ProseMirror>.tableWrapper:has(.active-block){opacity:1}

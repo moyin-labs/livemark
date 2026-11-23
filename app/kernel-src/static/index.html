@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="newsprint">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>LiveMark</title>
+    <link rel="stylesheet" href="./style/katex.min.css" />
+    <link rel="stylesheet" href="./style/kernel.css" />
+    <link rel="stylesheet" href="./style/preview.css" />
+  </head>
+  <body>
+    <div id="app" data-mode="live">
+      <aside id="sidebar" aria-label="文档侧栏">
+        <header id="sidebar-header">
+          <button
+            id="outline-tab"
+            class="sidebar-tab selected"
+            aria-selected="true"
+          >
+            大纲</button
+          ><button id="files-tab" class="sidebar-tab" aria-selected="false">
+            文件
+          </button>
+        </header>
+        <div id="sidebar-search-wrap">
+          <input
+            id="sidebar-search"
+            type="search"
+            placeholder="搜索标题"
+            aria-label="搜索侧栏"
+          />
+        </div>
+        <nav id="outline" aria-label="文档大纲"></nav>
+        <nav id="files" aria-label="文件树" hidden></nav>
+      </aside>
+      <div
+        id="sidebar-resizer"
+        role="separator"
+        aria-label="调整侧栏宽度"
+        aria-orientation="vertical"
+        tabindex="0"
+      ></div>
+      <section id="workspace">
+        <aside id="external-change-bar" role="status" hidden>
+          <span>文件已在外部更新，已保留当前未保存的修改。</span>
+          <div>
+            <button id="reload-from-disk" type="button">放弃本地修改，载入磁盘版本</button>
+            <button id="overwrite-disk" type="button">用本地修改覆盖保存</button>
+            <button id="save-conflict-copy" type="button">另存为…</button>
+          </div>
+        </aside>
+        <form id="find-bar" hidden>
+          <div class="find-row">
+            <input
+              id="find-input"
+              type="search"
+              placeholder="查找"
+              aria-label="查找文本"
+            /><span id="find-count" aria-live="polite">0项</span
+            ><label title="区分大小写"
+              ><input id="find-case" type="checkbox" />Aa</label
+            ><button type="button" id="find-prev" aria-label="上一项">↑</button
+            ><button type="button" id="find-next" aria-label="下一项">↓</button
+            ><button type="button" id="find-replace-toggle">替换</button
+            ><button type="button" id="find-close" aria-label="关闭查找">
+              ×
+            </button>
+          </div>
+          <div class="find-row" id="replace-row" hidden>
+            <input
+              id="replace-input"
+              placeholder="替换为"
+              aria-label="替换文本"
+            /><button type="button" id="replace-one">替换</button
+            ><button type="button" id="replace-all">全部替换</button>
+          </div>
+        </form>
+        <div id="table-tools" hidden role="toolbar" aria-label="表格操作">
+          <button data-command="table.rowAfter">添加行</button
+          ><button data-command="table.columnAfter">添加列</button
+          ><span class="tool-divider"></span
+          ><button data-command="table.left">左对齐</button
+          ><button data-command="table.center">居中</button
+          ><button data-command="table.right">右对齐</button
+          ><span class="tool-divider"></span
+          ><button data-command="table.deleteRow">删除行</button
+          ><button data-command="table.deleteColumn">删除列</button
+          ><button data-command="table.delete">删除表格</button>
+        </div>
+        <main id="writing-pane" aria-label="写作页面">
+          <article id="rich-host" class="document"></article>
+        </main>
+        <main id="source-pane" aria-label="Markdown源码" hidden>
+          <div id="cm-host"></div>
+        </main>
+        <main id="preview-pane" aria-label="只读预览" hidden>
+          <article id="preview" class="document"></article>
+        </main>
+      </section>
+      <footer id="status-bar">
+        <div>
+          <span id="selection-count"></span
+          ><button id="word-count" aria-label="文档统计">0字</button>
+        </div>
+      </footer>
+    </div>
+    <dialog id="insert-dialog">
+      <form method="dialog" id="insert-form">
+        <h2 id="dialog-title"></h2>
+        <div id="dialog-fields"></div>
+        <footer>
+          <button value="cancel" id="dialog-cancel">取消</button
+          ><button value="confirm" id="dialog-confirm" class="primary">
+            确定
+          </button>
+        </footer>
+      </form>
+    </dialog>
+    <div id="context-menu" role="menu" hidden></div>
+    <div id="toast" role="status" hidden></div>
+    <script src="./main.js"></script>
+  </body>
+</html>
