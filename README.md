@@ -1,44 +1,59 @@
+<img src="app/assets/app_icon.png" width="80" height="80" alt="LiveMark 应用图标">
+
 # LiveMark
 
-LiveMark 是 **Typora 的开源替代方案**，也是一款原生 macOS Markdown 编辑器。它支持在正文中直接编辑排版，也可以随时切换到 Markdown 源码。
+**简体中文** · [English](README.en.md)
 
-- AppKit 提供独立文档窗口、大纲、文件侧栏和系统菜单。
-- ProseMirror 负责即时编辑，CodeMirror 6 负责源码模式。
-- 支持任务列表、表格、KaTeX 公式、Mermaid 图表、查找替换及 HTML 导出。
-- 磁盘文件发生变化时自动刷新。有未保存修改时，用户可选择保留编辑或载入磁盘版本。
+**面向 macOS 的 Typora 开源替代方案。** 在排版后的正文中直接编辑 Markdown，按 `⌘/` 即可切换到源码模式。
 
-## 下载
+[下载最新版本](https://github.com/moyin-labs/livemark/releases/latest)
 
-从 [GitHub Releases](https://github.com/moyin-labs/livemark/releases) 按机型选取安装包。Apple 芯片选 `arm64`，Intel 芯片选 `x86_64`。打开 DMG 后，将 LiveMark 拖入“应用程序”。当前安装包使用 ad-hoc 签名，macOS 首次打开时可能拦截未经 Apple 公证的应用。
+## 安装
+
+需要 macOS 13 或更新版本。按你的 Mac 芯片选择 DMG。
+
+| Mac 芯片 | 安装包文件名后缀 |
+|---|---|
+| Apple 芯片（M 系列） | `-arm64.dmg` |
+| Intel 芯片 | `-x86_64.dmg` |
+
+打开 DMG，将 LiveMark 拖入“应用程序”。安装包使用 ad-hoc 签名，尚未经过 Apple 公证，首次打开时可能被 macOS 拦截。
+
+## 主要功能
+
+- 即时编辑与源码模式，分别由 ProseMirror 和 CodeMirror 6 提供。
+- 独立文档窗口、大纲、文件侧栏与系统菜单。
+- 可编辑表格和任务列表，渲染 KaTeX 公式和 Mermaid 图表。
+- 查找替换、HTML 导出与外部文件更新检测。有未保存的编辑时，可选择保留修改或载入磁盘版本。
 
 ## 构建
 
-需要 macOS 13 或更新版本，以及可用的 Swift 工具链。仓库包含预构建的 WebKernel，构建 macOS 应用无需 Node.js。
+在 macOS 上使用 Swift 5.9 或更新版本，从仓库根目录运行以下命令。仓库已包含预构建的 WebKernel，这一步无需 Node.js。
 
 ```bash
 ./app/build_app.sh
 open app/build/LiveMark.app
 ```
 
-修改 WebKernel 源码后，用 Node.js 和 npm 重新打包，再构建应用。
+修改 WebKernel 源码后，使用 Node.js 和 npm 重新打包，再构建应用。
 
 ```bash
-cd app/kernel-src
-npm ci
-./build.sh
-cd ../..
+(cd app/kernel-src && npm ci && ./build.sh)
 ./app/build_app.sh
 ```
 
-运行 `./app/build_dmg.sh` 可在 `app/dist/` 生成当前机器架构的 DMG。公开版本号由仓库根目录的 `VERSION` 指定。推送与版本号匹配的标签（如 `v0.1.0`）后，GitHub Actions 会构建 Apple 芯片和 Intel 两个 DMG，并发布到同一个 Release。
+本地运行 `./app/build_dmg.sh`，可在 `app/dist/` 生成当前机器架构的 DMG。推送与根目录 `VERSION` 匹配的标签（如 `v0.1.0`）后，GitHub Actions 会构建两种架构并将 DMG 上传至同一个 Release。
 
 ## 测试
 
 安装 WebKernel 依赖后，从仓库根目录运行 Markdown 解析与序列化检查。
 
 ```bash
+npm --prefix app/kernel-src ci
 mkdir -p app/.build/ui_validation
-app/kernel-src/node_modules/.bin/esbuild app/tests/schema_check.ts --bundle --platform=node --format=cjs --outfile=app/.build/ui_validation/schema_check.cjs
+app/kernel-src/node_modules/.bin/esbuild app/tests/schema_check.ts \
+  --bundle --platform=node --format=cjs \
+  --outfile=app/.build/ui_validation/schema_check.cjs
 node app/.build/ui_validation/schema_check.cjs
 ```
 
@@ -51,9 +66,7 @@ node app/.build/ui_validation/schema_check.cjs
 | `app/Sources/LiveMark/` | AppKit 窗口、文档管理、原生桥接和预构建 WebKernel |
 | `app/kernel-src/` | 编辑器内核和界面资源 |
 | `app/tests/` | 回归脚本和测试样例 |
-| `docs/` | 开发文档 |
-
-[桥接协议](docs/桥接协议.md)
+| `docs/` | 开发文档，包括[桥接协议](docs/桥接协议.md) |
 
 ## 许可证
 
